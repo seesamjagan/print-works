@@ -1,0 +1,100 @@
+{
+    "unit": "inch",
+    "standard": [
+        {
+            "country": "ISO 7810 ID-1",
+            "w": 3.370,
+            "h": 2.125
+        },
+        {
+            "country": "ISO 216 - A8 sized",
+            "w": 2.913,
+            "h": 2.047
+        },
+        {
+            "country": "Australia",
+            "w": 3.543,
+            "h": 1.968
+        },
+        {
+            "country": "United States",
+            "w": 3.5,
+            "h": 2
+        },
+        {
+            "country": "Canada",
+            "w": 3.5,
+            "h": 2
+        },
+        {
+            "country": "China",
+            "w": 3.543,
+            "h": 2.125
+        },
+        {
+            "country": "Czech Republic",
+            "w": 3.543,
+            "h": 1.968
+        },
+        {
+            "country": "France",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "Germany",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "Hungary",
+            "w": 3.543,
+            "h": 1.968
+        },
+        {
+            "country": "Italy",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "Netherlands",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "Japan",
+            "w": 3.582,
+            "h": 2.165
+        },
+        {
+            "country": "Russia",
+            "w": 3.543,
+            "h": 1.968
+        },
+        {
+            "country": "Scandinavia",
+            "w": 3.54,
+            "h": 2.165
+        },
+        {
+            "country": "Slovakia",
+            "w": 3.543,
+            "h": 1.968
+        },
+        {
+            "country": "Spain",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "Switzerland",
+            "w": 3.346,
+            "h": 2.165
+        },
+        {
+            "country": "United Kingdom",
+            "w": 3.346,
+            "h": 2.165
+        }
+    ]
+}
