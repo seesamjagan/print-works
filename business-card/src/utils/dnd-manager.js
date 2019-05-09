@@ -16,6 +16,7 @@ export class DnDManager {
     dndInstance = this;
     this.draggabels = [];
     this.configs = {};
+    window.dndInstance = this;
   }
 
   init = dom => {
@@ -85,20 +86,21 @@ export class DnDManager {
       t.classList.contains(draggable)
     );
     if (draggable && !t.classList.contains("no-drag")) {
-      // its a valid dragabble element. store it.
+      log("its a valid dragabble element. store it");
+      log("Drag Config for %s", draggable, this.configs[this.draggable]);
+
+      let config = this.configs[draggable];
+
       this.target = t;
       this.draggable = draggable;
       this._targetDim = getDim(e);
 
-      log("Drag Config for %s", draggable, this.configs[this.draggable]);
       // stop default mouse actions such as selection
       e.preventDefault();
       e.stopPropagation();
 
-      let config = this.configs[this.draggable];
-
       // notify the drag start event by onDragStart callback
-      config.onDragStart && config.onDragStart(t);
+      config.onDragStart && config.onDragStart(t, this._targetDim);
 
       // hook the mouse move and up event handlers
       this.dom.addEventListener("mousemove", this.onMouseMove);
@@ -124,15 +126,15 @@ export class DnDManager {
         //windowY,
         mouseX,
         mouseY,
-        offsetX,
-        offsetY,
+        parentX,
+        parentY,
         width,
         height
       } = this._targetDim;
 
       // calculate the new left and top
-      left = event.clientX - offsetX;
-      top = event.clientY - offsetY;
+      left = event.clientX - parentX;
+      top = event.clientY - parentY;
 
       let config = this.configs[this.draggable];
 
@@ -145,7 +147,7 @@ export class DnDManager {
         maxTop,
         noLeft,
         noTop,
-        gripToCenter
+        gripToCenter,
       } = config;
 
       if (gripToCenter) {
@@ -177,7 +179,14 @@ export class DnDManager {
 
       // notify dragging event via onDrag callback
       config.onDrag &&
-        config.onDrag(node, { left, top, oldLeft: localX, oldTop: localY });
+        config.onDrag(node, {
+          left: left,
+          top: top,
+          oldLeft: localX,
+          oldTop: localY,
+          xDiff: left - localX,
+          yDiff: top - localY
+        }, this.draggable);
 
       // apply the computed left and top to the element
       !noLeft && (node.style.left = px(left));
@@ -210,7 +219,7 @@ export class DnDManager {
  */
 var dndInstance = null;
 
-const debug = true;
+const debug = process.env.NODE_ENV === "development";
 
 const log = (...args) => debug && console.log(...args);
 
@@ -223,11 +232,16 @@ export const toInt = value => {
   return isNaN(value) ? 0 : value;
 };
 
-const px = value => value + "px";
+export const px = value => value + "px";
 
-const getDim = ({ target: t, clientX, clientY }) => {
+/**
+ * util to find the dimension of the target of the event
+ * @param {MouseEvent} param0 event 
+ * @param {number} zoom 
+ */
+export const getDim = ({ target: t, clientX, clientY }, zoom = 1) => {
   let {
-    left: windowX,
+    left: windowX ,
     top: windowY,
     width,
     height
@@ -235,8 +249,8 @@ const getDim = ({ target: t, clientX, clientY }) => {
 
   let localX = parseInt(t.style.left) || 0;
   let localY = parseInt(t.style.top) || 0;
-  let offsetX = windowX - localX;
-  let offsetY = windowY - localY;
+  let parentX = windowX - localX;
+  let parentY = windowY - localY;
   let mouseX = clientX - windowX;
   let mouseY = clientY - windowY;
 
@@ -245,8 +259,8 @@ const getDim = ({ target: t, clientX, clientY }) => {
     localY, // top position of the target in parent
     windowX, // left position of the target in document
     windowY, // top position of the target in document
-    offsetX, // left position of the PARENT in document
-    offsetY, // top position of the PARENT in document
+    parentX, // left position of the PARENT in document
+    parentY, // top position of the PARENT in document
     mouseX, // left position of the mouse in the target
     mouseY, // top  position of the mouse in the target
     width, // width of the target
@@ -276,6 +290,7 @@ const defaultConfig = {
   noLeft: false,
   noTop: false,
   gripToCenter: false,
+  zoom: 1,
   onDragStart: null,
   onDrag: null,
   onDragEnd: null

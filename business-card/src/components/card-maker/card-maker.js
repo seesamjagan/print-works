@@ -8,7 +8,8 @@ import "./card-maker.scss";
 export default class CardMaker extends Component {
   state = {
     size: standard[0],
-    includeGutter: true
+    includeGutter: true,
+    dpi: 100,
   };
   onSizeChange = e => {
     let country = e.target.value;
@@ -18,13 +19,20 @@ export default class CardMaker extends Component {
 
   onIncludeGutterChange = e => {
     this.setState({
-        includeGutter: e.target.checked
+      includeGutter: e.target.checked
     });
+  };
+
+  componentDidMount() {
+      let dpiFinder=document.getElementById("dpiFinder");
+      let dpi = dpiFinder.getBoundingClientRect().width;
+      dpiFinder.style.display="none";
+      this.setState({dpi})
   }
 
   render() {
     let {
-      state: { size, includeGutter }
+      state: { size, includeGutter, dpi }
     } = this;
     return (
       <div className="card-maker">
@@ -37,15 +45,18 @@ export default class CardMaker extends Component {
               </option>
             ))}
           </select>
-          <input id="includeGutter" type="checkbox" checked={includeGutter} onChange={this.onIncludeGutterChange} /> <label htmlFor="includeGutter">Include Gutter</label>
+          <input
+            id="includeGutter"
+            type="checkbox"
+            checked={includeGutter}
+            onChange={this.onIncludeGutterChange}
+          />{" "}
+          <label htmlFor="includeGutter">Include Gutter</label>
+          <div id="dpiFinder" style={{width: "1in", display: "inline-block"}}>.</div>
         </div>
-        
+
         <div className="work-area">
-          {size ? (
-            <BusinessCard size={size} unit={unit} includeGutter={includeGutter} />
-          ) : (
-            <div>No size info found!</div>
-          )}
+          <BusinessCard size={size} unit={unit} includeGutter={includeGutter} dpi={dpi} />
         </div>
       </div>
     );
