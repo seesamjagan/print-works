@@ -21,7 +21,12 @@
 }
 .left-resize-gripper, .right-resize-gripper {
     height: 16px;
+    cursor: col-resize;
 }
 .bottom-resize-gripper, .top-resize-gripper {
     width: 16px;
+    cursor: row-resize;
+}
+.bottom-right-resize-gripper {
+    cursor: nwse-resize;
 }
