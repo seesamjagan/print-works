@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import BusinessCard from "./business-card";
-
 import { unit, standard } from "./../../json/card-size.json";
 
 import "./card-maker.scss";
@@ -10,6 +9,7 @@ export default class CardMaker extends Component {
     size: standard[0],
     includeGutter: true,
     dpi: 100,
+    printCard: false,
   };
   onSizeChange = e => {
     let country = e.target.value;
@@ -23,16 +23,32 @@ export default class CardMaker extends Component {
     });
   };
 
+  onSave = e => {
+    this.setState({
+      printCard: true
+    });
+  };
+
+  onPrint = canvas => {
+    let img = document.createElement("img");
+    img.src = canvas.toDataURL("image/png");
+    document.body.appendChild(img);
+    this.setState({
+      printCard: false
+    });
+  }
+
   componentDidMount() {
-      let dpiFinder=document.getElementById("dpiFinder");
-      let dpi = dpiFinder.getBoundingClientRect().width;
-      dpiFinder.style.display="none";
-      this.setState({dpi})
+    let dpiFinder = document.getElementById("dpiFinder");
+    let dpi = dpiFinder.getBoundingClientRect().width;
+    dpiFinder.style.display = "none";
+    this.setState({ dpi });
   }
 
   render() {
     let {
-      state: { size, includeGutter, dpi }
+      state: { size, includeGutter, dpi, printCard },
+      onPrint, onSave
     } = this;
     return (
       <div className="card-maker">
@@ -50,13 +66,23 @@ export default class CardMaker extends Component {
             type="checkbox"
             checked={includeGutter}
             onChange={this.onIncludeGutterChange}
-          />{" "}
-          <label htmlFor="includeGutter">Include Gutter</label>
-          <div id="dpiFinder" style={{width: "1in", display: "inline-block"}}>.</div>
+          />
+          <label htmlFor="includeGutter">Include Gutter </label>
+          <div id="dpiFinder" style={{ width: "1in", display: "inline-block" }}>
+            .
+          </div>
+          <button onClick={onSave}>Save</button>
         </div>
 
         <div className="work-area">
-          <BusinessCard size={size} unit={unit} includeGutter={includeGutter} dpi={dpi} />
+          <BusinessCard
+            size={size}
+            unit={unit}
+            includeGutter={includeGutter}
+            dpi={dpi}
+            onPrint={onPrint}
+            printCard={printCard}
+          />
         </div>
       </div>
     );

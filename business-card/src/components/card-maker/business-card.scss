@@ -34,4 +34,18 @@
             }
         }
     }
+
+    &.printing {
+        background-color: #FFF;
+        .print-area {
+            border: dashed thin #CCC;
+            box-sizing: content-box;
+            .safe-zone {
+                display: none;
+            }
+            .element {
+                background-color: unset;
+            }
+        }
+    }
 }

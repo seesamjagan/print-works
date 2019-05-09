@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Transformer from "../transformer/transformer";
+import html2canvas from "html2canvas";
 import "./business-card.scss";
 
 const GUTTER = 0.25;
@@ -7,30 +8,48 @@ const SAFE_ZONE_OFFSET = 0.25;
 const DPI = 150;
 
 export class BusinessCard extends Component {
+  static defaultProps = {
+    includeGutter: true,
+    printCard: false,
+  };
+
   state = {
     targetSize: null
   };
 
   onElementClick = e => {
-    if(e.target.classList.contains("element")) {
+    if (e.target.classList.contains("element")) {
       this.setState({ target: e.target });
       e.stopPropagation();
-    } else if(e.target.className === "business-card" || e.target.className === "print-area") {
+    } else if (
+      e.target.className === "business-card" ||
+      e.target.className === "print-area"
+    ) {
       this.setState({ target: null });
     }
-    
   };
 
   onTransform = (target, { left, top, width, height }) => {
     // TODO :: ??
   };
 
+  componentDidUpdate(prevProp, prevState) {
+
+    if(this.props.printCard) {
+      setTimeout(()=>{
+        html2canvas(document.querySelector("#business-card")).then(canvas => {
+          this.props.onPrint && this.props.onPrint(canvas);
+        });
+      }, 0);
+    }
+  }
+
   render() {
     let {
       props: {
         size: { w, h },
-        includeGutter = true,
-        dpi: DEFAULT_DPI
+        includeGutter,
+        printCard,
       },
       state: { targetSize, target }
     } = this;
@@ -56,9 +75,14 @@ export class BusinessCard extends Component {
       bottom: safeZoneOffset
     };
 
+    let className = "business-card";
+    if(printCard) {
+      className += " printing";
+    }
+
     return (
-      <div
-        className="business-card"
+      <div id="business-card"
+        className={className}
         style={CARD_STYLE}
         onClick={this.onElementClick}
       >
@@ -67,7 +91,7 @@ export class BusinessCard extends Component {
           <TextElement defaultText="text line 1" />
           <TextElement defaultText="text line 2" />
           <Transformer
-            target={target}
+            target={printCard ? null : target}
             targetSize={targetSize}
             onTransform={this.onTransform}
           />
