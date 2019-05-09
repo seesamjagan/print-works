@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Transformer from "../transformer/transformer";
 import "./business-card.scss";
 
-
 const GUTTER = 0.25;
 const SAFE_ZONE_OFFSET = 0.25;
 const DPI = 150;
@@ -13,14 +12,13 @@ export class BusinessCard extends Component {
   };
 
   onElementClick = e => {
-    this.setState({target: e.target});
+    this.setState({ target: e.target });
     e.stopPropagation();
   };
 
-  onTransformerResize = (target, {left, top, width, height}) => {
-    
-    console.log(target)
-  }
+  onTransform = (target, { left, top, width, height }) => {
+    // TODO :: ??
+  };
 
   render() {
     let {
@@ -57,9 +55,19 @@ export class BusinessCard extends Component {
       <div className="business-card" style={CARD_STYLE}>
         <div className="print-area" style={PRINT_STYLE}>
           <div className="safe-zone" style={SAF_ZONE_STYLE} />
-          <TextElement onClick={this.onElementClick} />
-          <TextElement onClick={this.onElementClick} />
-          <Transformer target={target} targetSize={targetSize} onResize={this.onTransformerResize} />
+          <TextElement
+            onClick={this.onElementClick}
+            defaultText="text line 1"
+          />
+          <TextElement
+            onClick={this.onElementClick}
+            defaultText="text line 2"
+          />
+          <Transformer
+            target={target}
+            targetSize={targetSize}
+            onTransform={this.onTransform}
+          />
         </div>
       </div>
     );
@@ -67,6 +75,9 @@ export class BusinessCard extends Component {
 }
 
 class TextElement extends Component {
+  state = {
+    text: ""
+  };
   onElementDoubleClick = e => {
     e.target.contentEditable = true;
   };
@@ -76,9 +87,8 @@ class TextElement extends Component {
 
   render() {
     let {
-      props: {
-        onClick, style
-      }
+      props: { onClick, style, defaultText },
+      state: { text }
     } = this;
     return (
       <section
@@ -88,7 +98,7 @@ class TextElement extends Component {
         onDoubleClick={this.onElementDoubleClick}
         onBlur={this.onElementBlur}
       >
-        this is some text
+        {text || defaultText}
       </section>
     );
   }

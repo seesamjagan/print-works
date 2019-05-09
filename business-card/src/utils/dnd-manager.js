@@ -237,9 +237,8 @@ export const px = value => value + "px";
 /**
  * util to find the dimension of the target of the event
  * @param {MouseEvent} param0 event 
- * @param {number} zoom 
  */
-export const getDim = ({ target: t, clientX, clientY }, zoom = 1) => {
+export const getDim = ({ target: t, clientX, clientY }) => {
   let {
     left: windowX ,
     top: windowY,
@@ -247,8 +246,8 @@ export const getDim = ({ target: t, clientX, clientY }, zoom = 1) => {
     height
   } = t.getBoundingClientRect();
 
-  let localX = parseInt(t.style.left) || 0;
-  let localY = parseInt(t.style.top) || 0;
+  let localX = toInt(t.style.left);
+  let localY = toInt(t.style.top);
   let parentX = windowX - localX;
   let parentY = windowY - localY;
   let mouseX = clientX - windowX;
@@ -290,7 +289,6 @@ const defaultConfig = {
   noLeft: false,
   noTop: false,
   gripToCenter: false,
-  zoom: 1,
   onDragStart: null,
   onDrag: null,
   onDragEnd: null

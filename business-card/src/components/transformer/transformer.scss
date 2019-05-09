@@ -1,24 +1,27 @@
-.transformer {
-  position: absolute;
-  display: inline-block;
-  border: dashed thin #090;
-  overflow: visible;
-}
-.transform-gripper {
+.transform-element {
   display: inline-block;
   position: absolute;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 .resize-gripper {
   cursor: grabbing;
-  background-color: #090;
-  width: 10px;
-  height: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.6);
+  background-color: #FFF;
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.6);
 }
 .move-gripper {
   cursor: move;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+}
+.transformer-border {
   border: dashed thin #090;
+}
+.left-resize-gripper, .right-resize-gripper {
+    height: 16px;
+}
+.bottom-resize-gripper, .top-resize-gripper {
+    width: 16px;
 }
