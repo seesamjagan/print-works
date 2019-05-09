@@ -16,7 +16,7 @@ export class DnDManager {
     dndInstance = this;
     this.draggabels = [];
     this.configs = {};
-    window.dndInstance = this;
+    window.dndInstance = this; // for debugging in console.
   }
 
   init = dom => {

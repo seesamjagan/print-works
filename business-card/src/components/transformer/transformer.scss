@@ -4,20 +4,21 @@
   border: dashed thin #090;
   overflow: visible;
 }
-.resize-gripper {
+.transform-gripper {
   display: inline-block;
   position: absolute;
+  box-sizing: border-box;
+}
+.resize-gripper {
+  cursor: grabbing;
   background-color: #090;
   width: 10px;
   height: 10px;
   border-radius: 20px;
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.6);
-  cursor: grabbing;
 }
 .move-gripper {
-  display: inline-block;
-  position: absolute;
+  cursor: move;
   background: rgba(0, 0, 0, 0.1);
   border: dashed thin #090;
-  box-sizing: border-box;
 }
