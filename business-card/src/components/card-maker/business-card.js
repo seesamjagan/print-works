@@ -58,6 +58,7 @@ export class BusinessCard extends Component {
         <div className="print-area" style={PRINT_STYLE}>
           <div className="safe-zone" style={SAF_ZONE_STYLE} />
           <TextElement onClick={this.onElementClick} />
+          <TextElement onClick={this.onElementClick} />
           <Transformer target={target} targetSize={targetSize} onResize={this.onTransformerResize} />
         </div>
       </div>

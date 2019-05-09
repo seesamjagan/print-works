@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./transformer.scss";
 import { DnDManager, px, toInt, getDim } from "../../utils/dnd-manager";
-import { classBody } from "@babel/types";
 
 export default class Transformer extends Component {
   state = {
@@ -11,6 +10,16 @@ export default class Transformer extends Component {
     bottomPos: null,
     bottomRightPos: null
   };
+
+  gs = { width: 10, height: 10 };
+
+  get gripHeight() {
+    return this.gs.height/2;
+  }
+
+  get gripWidth() {
+    return this.gs.width/2;
+  }
 
   componentDidMount() {
     DnDManager.getInstance()
@@ -39,7 +48,7 @@ export default class Transformer extends Component {
     { left, top, oldLeft, oldTop, xDiff, yDiff },
     className
   ) => {
-    let gripSize = 20 / 2;
+    let gripSize = this.gripWidth;
     let {
       state: { leftPos, rightPos, topPos, bottomPos, bottomRightPos },
       props: { onTransform, target }
@@ -179,24 +188,44 @@ export default class Transformer extends Component {
   };
 
   componentDidUpdate(preProps, preState) {
+    let gripper = document.getElementsByClassName("resize-gripper")[0];
+    if (gripper) {
+      this.gs = getDim({ target: gripper });
+    }
+
     if (preProps.target !== this.props.target) {
       let targetSize = getDim({ target: this.props.target });
-      let { width, height } = targetSize;
-      const gripperSize = 20 / 2;
+      let { width, height, localX, localY } = targetSize;
+      const gripperSize = this.gripWidth;
       this.setState({
-        leftPos: { left: px(-gripperSize), top: px(height / 2 - gripperSize) },
+        // left side
+        leftPos: {
+          left: px(localX - gripperSize),
+          top: px(height / 2 + localY - gripperSize)
+        },
+
+        // right side
         rightPos: {
-          left: px(width - gripperSize),
-          top: px(height / 2 - gripperSize)
+          left: px(localX + width - gripperSize),
+          top: px(localY + height / 2 - gripperSize)
         },
-        topPos: { left: px(width / 2 - gripperSize), top: px(-gripperSize) },
+
+        // top side
+        topPos: {
+          left: px(localX + width / 2 - gripperSize),
+          top: px(localY - gripperSize)
+        },
+
+        // bottom side
         bottomPos: {
-          left: px(width / 2 - gripperSize),
-          top: px(height - gripperSize)
+          left: px(localX + width / 2 - gripperSize),
+          top: px(localY + height - gripperSize)
         },
+
+        // bottom right side
         bottomRightPos: {
-          left: px(width - gripperSize),
-          top: px(height - gripperSize)
+          left: px(localX + width - gripperSize),
+          top: px(localY + height - gripperSize)
         },
         targetSize
       });
@@ -216,20 +245,20 @@ export default class Transformer extends Component {
     } = this;
 
     if (!targetSize) return null;
-    /* 
-    let gripSize = 20 / 2;
 
-    let style = {
-      left: targetSize.localX,
-      top: targetSize.localY,
-      width: px(toInt(bottomRightPos.left) + gripSize),
-      height: px(toInt(bottomRightPos.top) + gripSize)
+    let gripSize = this.gripWidth;
+
+    let moveStyle = {
+      left: px(toInt(leftPos.left) + gripSize),
+      top: px(toInt(topPos.top) + gripSize),
+      width: px(toInt(rightPos.left) - toInt(leftPos.left)),
+      height: px(toInt(bottomPos.top) - toInt(topPos.top))
     };
- */
     return (
       <>
         {/*
         div className="transformer" style={style} */}
+        <div className="move-gripper" style={moveStyle} />
         <ResizeGripper className="left-resize-gripper" position={leftPos} />
         <ResizeGripper className="right-resize-gripper" position={rightPos} />
         <ResizeGripper className="top-resize-gripper" position={topPos} />
