@@ -12,8 +12,13 @@ export class BusinessCard extends Component {
   };
 
   onElementClick = e => {
-    this.setState({ target: e.target });
-    e.stopPropagation();
+    if(e.target.classList.contains("element")) {
+      this.setState({ target: e.target });
+      e.stopPropagation();
+    } else if(e.target.className === "business-card" || e.target.className === "print-area") {
+      this.setState({ target: null });
+    }
+    
   };
 
   onTransform = (target, { left, top, width, height }) => {
@@ -52,17 +57,15 @@ export class BusinessCard extends Component {
     };
 
     return (
-      <div className="business-card" style={CARD_STYLE}>
+      <div
+        className="business-card"
+        style={CARD_STYLE}
+        onClick={this.onElementClick}
+      >
         <div className="print-area" style={PRINT_STYLE}>
           <div className="safe-zone" style={SAF_ZONE_STYLE} />
-          <TextElement
-            onClick={this.onElementClick}
-            defaultText="text line 1"
-          />
-          <TextElement
-            onClick={this.onElementClick}
-            defaultText="text line 2"
-          />
+          <TextElement defaultText="text line 1" />
+          <TextElement defaultText="text line 2" />
           <Transformer
             target={target}
             targetSize={targetSize}

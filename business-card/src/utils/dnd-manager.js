@@ -208,7 +208,6 @@ export class DnDManager {
     if (config && config.onDragEnd) {
       config.onDragEnd(this.target);
     }
-
     // clear the refs.
     this.target = null;
   };

@@ -215,19 +215,24 @@ export default class Transformer extends Component {
     );
 
     if (preProps.target !== this.props.target) {
-      let targetDim = getDim({ target: this.props.target });
+        if(this.props.target) {
+            let targetDim = getDim({ target: this.props.target });
 
-      let targetParentDim = getDim({ target: this.props.target.parentElement });
-
-      let { width, height, localX: left, localY: top } = targetDim;
-      this.positionHandles({ left, top, width, height });
-      this.setState({ targetDim, targetParentDim });
-
-      if (!this.bottomRightGripperDim.width) {
-        setTimeout(() => {
-          this.positionHandles({ left, top, width, height });
-        }, 0);
-      }
+            let targetParentDim = getDim({ target: this.props.target.parentElement });
+      
+            let { width, height, localX: left, localY: top } = targetDim;
+            this.positionHandles({ left, top, width, height });
+            this.setState({ targetDim, targetParentDim });
+      
+            if (!this.bottomRightGripperDim.width) {
+              setTimeout(() => {
+                this.positionHandles({ left, top, width, height });
+              }, 0);
+            }
+        } else {
+            this.setState({ targetDim: null, targetParentDim: null });
+        }
+      
     }
     // drag and re-size will change the target dim's. so have to re-init the handle every time
     this.initHandles(this.props.target);
